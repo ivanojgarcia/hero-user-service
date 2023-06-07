@@ -16,8 +16,6 @@ const config: DynamoConfig = {
 }
 
 if( STAGE === "dev" ) {
-  config.accessKeyId = "dummy";
-  config.secretAccessKey = "dummy";
   config.endpoint = "http://localhost:8000";
   console.log("dynamodb-local mode", config);
 }

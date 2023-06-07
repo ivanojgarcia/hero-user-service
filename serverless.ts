@@ -12,7 +12,7 @@ const serverlessConfiguration: AWS = {
   plugins: PLUGINS_ARRAY,
   provider: {
     name: 'aws',
-    runtime: 'nodejs18.x',
+    runtime: 'nodejs16.x',
     stage: '${opt:stage, \'dev\'}',
     memorySize: 128,
     httpApi: {

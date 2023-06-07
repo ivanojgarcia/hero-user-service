@@ -6,7 +6,6 @@ import { UserRecord, UserRequest } from '@user/interface/user.interfaces';
 export const createUser = async (userData: UserRequest): Promise<UserRecord> => {
   const { email, password, name, lastName } = userData;
   validateUserCreate(userData);
-  
   const user = new User(name, lastName, email, password);
   return await saveUser(user);
 };

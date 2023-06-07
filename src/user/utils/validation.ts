@@ -1,7 +1,6 @@
 import * as Joi from 'joi';
 import { ValidationError } from '@libs/errors';
 import { UserRequest } from '@user/interface/user.interfaces';
-
 const createUserSchema = Joi.object<UserRequest>({
   name: Joi.string().min(1).required(),
   lastName: Joi.string().min(1).required(),

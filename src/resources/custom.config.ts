@@ -5,7 +5,7 @@ export const ES_BUILD = {
     minify: false,
     sourcemap: true,
     exclude: ['aws-sdk'],
-    target: 'node18',
+    target: 'node16',
     define: { 'require.resolve': undefined },
     platform: 'node',
     concurrency: 10,
