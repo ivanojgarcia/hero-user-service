@@ -6,6 +6,7 @@
       "@libs/*": ["src/libs/*"],
       "@resources/*": ["src/resources/*"],
       "@user/*": ["src/user/*"],
+      "@config/*": ["src/resources/config/*"],
     }
   }
 }

@@ -5,5 +5,9 @@ jspm_packages
 # Serverless directories
 .serverless
 
+# environment directories
+src/resources/environment
+src/resources/config
+
 # esbuild directories
 .esbuild

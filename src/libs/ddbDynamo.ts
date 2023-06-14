@@ -1,22 +1,24 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { AttributeValue, DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import {
   PutCommand,
   PutCommandInput,
   GetCommandInput,
   GetCommand,
+  UpdateCommand,
   DynamoDBDocumentClient,
   QueryCommandInput,
-  QueryCommand
+  QueryCommand,
+  QueryCommandOutput
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoConfig, DynamoQueryOptions } from "src/interfaces/config.interface";
-const { REGION, STAGE } = process.env
+const { REGION, STAGE, CONFIG_ENDPOINT } = process.env
 
 const config: DynamoConfig = {
   region: REGION || "us-east-1"
 }
 
 if( STAGE === "dev" ) {
-  config.endpoint = "http://localhost:8000";
+  config.endpoint = CONFIG_ENDPOINT;
   console.log("dynamodb-local mode", config);
 }
 
@@ -65,7 +67,7 @@ export class Dynamo {
     pkKey = "pk",
     skValue,
     skKey = "sk"
-  } : DynamoQueryOptions) {
+  } : DynamoQueryOptions):  Promise<QueryCommandOutput>{
     
     const skExpression = skValue ? `AND ${skKey} = :rangeValue` : "";
 
@@ -84,52 +86,45 @@ export class Dynamo {
     return res;
   }
 
-/*
-  query: async ({
-    tableName,
-    index,
+  async getOne(options: DynamoQueryOptions): Promise<Record<string, AttributeValue> | undefined> {
+    const result = await this.query(options);
+    return result.Items ? result.Items[0] : undefined;
+  }
 
-    pkValue,
-    pkKey = "pk",
+  async update(key: { [key: string]: string | number }, updateValues: object) {
+    const parameterToUpdate = this.generateUpdateParams(key, updateValues)
+    const parameter = {
+      ...parameterToUpdate,
+      TableName: this.tableName,
+      ReturnValues: 'ALL_NEW',
 
-    skValue,
-    skKey = "sk",
-
-    sortAscending = true,
-  }: {
-    tableName: string;
-    index: string;
-
-    pkValue: string;
-    pkKey?: string;
-
-    skValue?: string;
-    skKey?: string;
-
-    sortAscending?: boolean;
-  }) => {
-    const skExpression = skValue ? ` AND ${skKey} = :rangeValue` : "";
-
-    const params: QueryCommandInput = {
-      TableName: tableName,
-      IndexName: index,
-      KeyConditionExpression: `${pkKey} = :hashValue${skExpression}`,
-      ExpressionAttributeValues: {
-        ":hashValue": pkValue,
-      },
-    };
-
-    if (skValue) {
-      params.ExpressionAttributeValues[":rangeValue"] = skValue;
     }
+    const command = new UpdateCommand(parameter);
+    return await this.dynamoClient.send(command);
+  }
 
-    const command = new QueryCommand(params);
-    const res = await dynamoClient.send(command);
+  private generateUpdateParams( key: { [key: string]: string | number }, updateValues: object) {
+    const updateParts: string[] = [];
+    const attributeNames: { [key: string]: string } = {};
+    const attributeValues: { [key: string]: any } = {};
 
-    return res.Items;
-  },
-};
+    Object.entries(updateValues).forEach(([fieldName, fieldValue], index) => {
+        const fieldKey = `#field${index}`;
+        const valueKey = `:value${index}`;
 
-*/
+        updateParts.push(`${fieldKey} = ${valueKey}`);
+        attributeNames[fieldKey] = fieldName;
+        attributeValues[valueKey] = fieldValue;
+    });
+
+    const updateExpression = `SET ${updateParts.join(', ')}`;
+
+    return {
+        UpdateExpression: updateExpression,
+        ExpressionAttributeNames: attributeNames,
+        ExpressionAttributeValues: attributeValues,
+        Key: key
+    };
+}
 
 }

@@ -11,6 +11,8 @@ export const ROLE_DYNAMO_STATEMENTS = {
   ],
   Resource: [
     "arn:aws:dynamodb:${opt:region, self:provider.environment.REGION}:*:table/${self:provider.environment.USER_TABLE}",
-    "arn:aws:dynamodb:${opt:region, self:provider.environment.REGION}:*:table/${self:provider.environment.USER_TABLE}/*"
+    "arn:aws:dynamodb:${opt:region, self:provider.environment.REGION}:*:table/${self:provider.environment.USER_TABLE}/*",
+    "arn:aws:dynamodb:${opt:region, self:provider.environment.REGION}:*:table/${self:provider.environment.USER_TOKEN_TABLE}",
+    "arn:aws:dynamodb:${opt:region, self:provider.environment.REGION}:*:table/${self:provider.environment.USER_TOKEN_TABLE}/*"
   ],
 }
