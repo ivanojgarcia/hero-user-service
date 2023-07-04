@@ -1,13 +1,13 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
+import { APIGatewayProxyHandler, Context } from 'aws-lambda';
 import 'source-map-support/register';
 import handleError from '@libs/handleError';
 import { getUserById } from './handler';
-import { UnauthorizedError, ValidationError } from '@libs/errors';
+import { ValidationError } from '@libs/errors';
 
-export const getV1: APIGatewayProxyHandler = async (event) => {
-  const { pathParameters, headers } = event
+export const getV1: APIGatewayProxyHandler = async (event, context: any) => {
+  console.log("🚀 ~ file: index.ts:8 ~ constgetV1:APIGatewayProxyHandler= ~ contex:", context.requestContext)
+  const { pathParameters } = event
   try {
-    if(!headers.Authorization || !headers.Authorization.startsWith('Bearer ')) throw new UnauthorizedError('Unauthorized')
     if(!pathParameters) throw new ValidationError('Missing user ID')
     
     const {id} = pathParameters

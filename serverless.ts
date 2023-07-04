@@ -42,6 +42,8 @@ const serverlessConfiguration: AWS = {
       CONFIG_ENDPOINT: '${file(src/resources/environment/variable.${self:provider.stage}.json):CONFIG_ENDPOINT}',
       SECRET_NAME: '${file(src/resources/environment/variable.${self:provider.stage}.json):SECRET_NAME}',
       SECRET_KEY: '${file(src/resources/environment/variable.${self:provider.stage}.json):SECRET_KEY}',
+      SECRET_PUBLIC_NAME: '${file(src/resources/environment/variable.${self:provider.stage}.json):SECRET_PUBLIC_NAME}',
+      SECRET_PUBLIC_KEY: '${file(src/resources/environment/variable.${self:provider.stage}.json):SECRET_PUBLIC_KEY}',
       PATH_KEY: '${file(src/resources/environment/variable.${self:provider.stage}.json):PATH_KEY}',
     },
     iam: {

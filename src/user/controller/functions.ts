@@ -26,6 +26,12 @@ export const user = {
             method: 'GET',
             path: '/api/v1/users/{id}',
             cors: true,
+            authorizer: {
+              name: 'Authorizer',
+              resultTtlInSeconds: 30,
+              identitySource: 'method.request.header.Authorization',
+              type: 'TOKEN'
+            },
             request: {
               parameters: {
                 paths: {

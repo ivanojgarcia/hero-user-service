@@ -41,3 +41,10 @@ export interface LoginResponse {
     refresh_token?: string;
     expires_in: number;
 }
+
+export interface TokenDecoded {
+    id: string,
+    email: string,
+    iat?: string,
+    exp?: string
+}
